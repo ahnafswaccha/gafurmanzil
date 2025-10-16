@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gafur Manzil</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #111; 
+            color: white; 
+        }
+
+        header {
+            background-color: #1A2430; 
+            color: white;           
+            padding: 15px 0;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(255, 255, 255, 0.1);
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+        }
+
+        header .logo-img {
+            height: 75px; 
+            margin-right: 15px; 
+            border-radius: 5px; 
+            border: 1px solid #333; 
+            transition: transform 0.3s ease-in-out;
+        }
+        header .logo-img:hover {
+            transform: scale(1.1);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.2em;
+            color: white; 
+            font-family: 'Verdana', sans-serif; 
+            font-weight: bold;
+            letter-spacing: 1px;
+            transition: color 0.3s ease-in-out;
+        }
+        header h1:hover {
+            color: #3498db; 
+        }
+
+        main {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 0 20px;
+            min-height: 70vh; /* Ensures footer stays low even with little content */
+        }
+
+        h2 {
+            text-align: center;
+            color: #ccc; 
+            margin-bottom: 25px;
+            border-bottom: 2px solid #555; 
+            padding-bottom: 5px;
+        }
+
+        /* Resident Card Styling */
+        #residents-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+
+        .resident-card {
+            background-color: #1a1a1a; 
+            border: 1px solid #444;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            flex-basis: 150px; 
+            max-width: 180px;  
+            flex-grow: 1;      
+            text-align: center;
+            color: white;
+            position: relative; 
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .resident-card:hover {
+            transform: translateY(-5px); 
+            box-shadow: 0 5px 15px rgba(255, 255, 255, 0.1); 
+        }
+
+        .resident-card img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 10px;
+            border: 2px solid #3498db;
+            transition: transform 0.3s ease;
+        }
+        .resident-card img:hover {
+            transform: scale(1.05);
+            border: 2px solid #fff; 
+        }
+        .resident-card h4, .resident-card p {
+            margin: 5px 0;
+        }
+        
+        /* Status Badge Style */
+        .status-badge {
+            display: inline-block;
+            margin-top: 5px;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: bold;
+            color: white;
+            background-color: #27ae60;
+        }
+
+        /* Delete Button Style */
+        .delete-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            font-size: 1.2em;
+            line-height: 1;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            display: none; 
+        }
+        .delete-btn:hover {
+            background-color: #c0392b;
+        }
+        .admin-mode .delete-btn {
+            display: block;
+        }
+
+        /* Admin Button & Form Section Styling */
+        #admin-actions {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        #admin-mode-toggle {
+            background-color: #3498db; 
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s;
+            margin: 5px;
+        }
+
+        #add-resident-section {
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        /* Form Styling */
+        #resident-form {
+            display: flex;
+            flex-direction: column;
+            background-color: #222; 
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 400px;
+            margin: 20px auto 0;
+        }
+        
+        #resident-form label {
+            margin-top: 10px;
+            font-weight: bold;
+            color: #fff; 
+            text-align: left;
+        }
+
+        #resident-form input, #resident-form select {
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #444;
+            border-radius: 4px;
+            background-color: #333; 
+            color: #fff;
+        }
+
+        #resident-form button {
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .hidden { display: none !important; }
+        .message { padding: 10px; border-radius: 4px; margin-top: 10px; text-align: center; }
+        .success { background-color: #1e3c23; color: #d4edda; border: 1px solid #33663b;} 
+        .error { background-color: #58151c; color: #f8d7da; border: 1px solid #802d36; } 
+
+        /* FOOTER STYLES */
+        footer {
+            background-color: #1A2430; /* Matches the header color */
+            color: #ccc;
+            text-align: center;
+            padding: 15px 0;
+            font-size: 0.9em;
+            margin-top: 20px; /* Space above the footer */
+            border-top: 1px solid #333;
+        }
+
+        footer a {
+            color: #3498db; /* Link color */
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer a:hover {
+            color: #fff;
+            text-decoration: underline;
+        }
+
+    </style>
+</head>
+<body>
+    <header>
+        <img src="Swa.png" alt="Gafur Manzil Logo" class="logo-img"> 
+        <h1>GAFUR MANZIL</h1>
+    </header>
+
+    <main>
+        <h2>People Who Live Here</h2>
+
+        <div id="residents-container">
+            </div>
+
+        <hr>
+
+        <div id="admin-actions">
+            <button id="admin-mode-toggle">Admin Mode: Off</button>
+        </div>
+
+        <section id="add-resident-section" class="hidden">
+            <h3>Add Details</h3>
+            <form id="resident-form"> 
+                <label for="admin-password">Admin Password:</label>
+                <input type="password" id="admin-password" required>
+
+                <label for="full-name">Full Name:</label>
+                <input type="text" id="full-name" required>
+
+                <label for="mobile">Mobile:</label>
+                <input type="tel" id="mobile" required>
+
+                <label for="floor-number">Floor Number:</label>
+                <input type="number" id="floor-number" required min="1">
+                
+                <label for="status-select">Status:</label>
+                <select id="status-select" required>
+                    <option value="Resident">Resident</option>
+                    <option value="Owner">Owner</option>
+                    <option value="Tenant"></option>
+                    <option value="Caretaker">Caretaker</option>
+                </select>
+
+                <label for="photo-url">Photo URL:</label>
+                <input type="url" id="photo-url" placeholder="Optional photo link">
+                
+                <button type="submit">Add Resident</button>
+                <div id="message" class="hidden message"></div>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        Website created by <a href="https://ahnafswaccha.github.io/ahnafswaccha/" target="blank">Ahnaf Swaccha</a>
+    </footer>
+
+    <script>
+        const ADMIN_PASSWORD = "admin123"; 
+        let isAdmin = false; 
+
+        let residents = [
+            { photo: 'https://via.placeholder.com/80/3498db/FFFFFF?text=J+D', fullName: 'Jahanara Dewan', mobile: '0171-XXXX-XXX', floorNumber: 2, status: 'Owner' },
+            { photo: 'https://via.placeholder.com/80/2ecc71/FFFFFF?text=R+A', fullName: 'Rahman Ahmed', mobile: '0181-XXXX-XXX', floorNumber: 4, status: 'Tenant' },
+            { photo: 'https://via.placeholder.com/80/e74c3c/FFFFFF?text=F+K', fullName: 'Fahima Khan', mobile: '0191-XXXX-XXX', floorNumber: 1, status: 'Resident' },
+            { photo: 'https://via.placeholder.com/80/f39c12/FFFFFF?text=M+I', fullName: 'Mizan Islam', mobile: '0155-XXXX-XXX', floorNumber: 3, status: 'Resident' },
+        ];
+
+        const residentsContainer = document.getElementById('residents-container');
+        const residentForm = document.getElementById('resident-form');
+        const messageElement = document.getElementById('message');
+        const adminModeToggleBtn = document.getElementById('admin-mode-toggle');
+        const addResidentSection = document.getElementById('add-resident-section');
+
+        function renderResidents() {
+            residentsContainer.innerHTML = ''; 
+            const sortedResidents = [...residents].sort((a, b) => a.floorNumber - b.floorNumber);
+
+            sortedResidents.forEach((resident, index) => {
+                const card = document.createElement('div');
+                card.className = 'resident-card';
+                
+                if (isAdmin) {
+                    card.classList.add('admin-mode');
+                }
+                
+                card.innerHTML = `
+                    <img src="${resident.photo}" alt="${resident.fullName}" onerror="this.onerror=null; this.src='https://via.placeholder.com/80/cccccc/000000?text=N/A';">
+                    <h4>${resident.fullName}</h4>
+                    <p>Mobile: ${resident.mobile}</p>
+                    <p>Floor: ${resident.floorNumber}</p>
+                    <span class="status-badge">${resident.status}</span> 
+                    <button class="delete-btn" data-index="${index}">&times;</button>
+                `;
+                residentsContainer.appendChild(card);
+            });
+        }
+
+        function showMessage(text, type) {
+            messageElement.textContent = text;
+            messageElement.className = `message ${type}`;
+            messageElement.classList.remove('hidden');
+
+            setTimeout(() => {
+                messageElement.classList.add('hidden');
+            }, 4000);
+        }
+
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            
+            const newResident = {
+                photo: document.getElementById('photo-url').value || 'https://via.placeholder.com/80/cccccc/000000?text=N/A',
+                fullName: document.getElementById('full-name').value,
+                mobile: document.getElementById('mobile').value,
+                floorNumber: parseInt(document.getElementById('floor-number').value),
+                status: document.getElementById('status-select').value 
+            };
+
+            residents.push(newResident);
+            renderResidents(); 
+            
+            residentForm.reset();
+            showMessage(`Success! ${newResident.fullName} (${newResident.status}) added.`, "success");
+        }
+
+        function handleDelete(e) {
+            if (e.target.classList.contains('delete-btn')) {
+                const indexToRemove = e.target.getAttribute('data-index');
+                if (confirm('Are you sure you want to delete this resident?')) {
+                    residents.splice(parseInt(indexToRemove), 1);
+                    renderResidents();
+                    showMessage("Resident deleted successfully.", "success");
+                }
+            }
+        }
+        
+        function toggleAdminMode() {
+            if (!isAdmin) {
+                const password = prompt("Enter Admin Password:");
+                if (password === ADMIN_PASSWORD) {
+                    isAdmin = true; 
+                    adminModeToggleBtn.textContent = 'Admin Mode: On (Click to Log Out)';
+                    addResidentSection.classList.remove('hidden');
+                    renderResidents(); 
+                } else if (password !== null) {
+                    alert("Incorrect Admin Password.");
+                }
+            } else {
+                isAdmin = false;
+                adminModeToggleBtn.textContent = 'Admin Mode: Off';
+                addResidentSection.classList.add('hidden');
+                renderResidents(); 
+                residentForm.reset();
+            }
+        }
+
+        residentForm.addEventListener('submit', handleFormSubmit);
+        residentsContainer.addEventListener('click', handleDelete);
+        adminModeToggleBtn.addEventListener('click', toggleAdminMode);
+        
+        renderResidents();
+    </script>
+</body>
+</html>
